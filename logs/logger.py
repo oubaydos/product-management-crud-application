@@ -8,7 +8,7 @@ formatter = logging.Formatter('%(asctime)s | %(levelname)s | %(message)s',
 
 stdout_handler = logging.StreamHandler(sys.stdout)
 
-file_handler = logging.FileHandler('logs.log')
+file_handler = logging.FileHandler('./logs/logs.log')
 file_handler.setFormatter(formatter)
 
 logger.addHandler(file_handler)
