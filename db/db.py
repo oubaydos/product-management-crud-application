@@ -40,6 +40,34 @@ class Database:
                 cursor.execute("SELECT * FROM PRODUCT WHERE product_id = %s ", [product_id])
                 return Product.from_tuple(cursor.fetchone())
             if product_name is not None:
-                cursor.execute("SELECT * FROM PRODUCT WHERE product_name = %s ", [product_name])
+                cursor.execute("SELECT * FROM PRODUCT WHERE product_name = %s; ", [product_name])
                 return Product.from_tuple(cursor.fetchone())
             return Product.not_found()
+
+    def update_product(self, product_id, product: Product):
+        with self.connection.cursor() as cursor:
+            if product_id is not None and product.product_name is not None:
+                cursor.execute(
+                    "UPDATE PRODUCT SET product_name= %s WHERE product_id = %s;",
+                    [product.product_name, product_id])
+                self.connection.commit()
+            if product_id is not None and product.product_price is not None:
+                cursor.execute(
+                    "UPDATE PRODUCT SET product_price= %s WHERE product_id = %s",
+                    [product.product_price, product_id])
+                self.connection.commit()
+            if product_id is not None and product.product_id is not None:
+                cursor.execute(
+                    "UPDATE PRODUCT SET product_id= %s WHERE product_id = %s;",
+                    [product.product_id, product_id])
+                self.connection.commit()
+
+    def insert_product(self, product: Product):
+        if None in product.to_dict().values():
+            raise RuntimeError("cannot perform the action, product not complete")
+        with self.connection.cursor() as cursor:
+            cursor.execute(
+                "INSERT INTO PRODUCT VALUES(%s,%s,%s)",
+                [product.product_id, product.product_name, product.product_price]
+            )
+            self.connection.commit()
