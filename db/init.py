@@ -20,6 +20,9 @@ def init(host="localhost", database="baba", user="nephojar", password="nephojar"
                         product_price real NOT NULL)'''
     cur.execute(query)
     conn.commit()
+    query = "CREATE EXTENSION IF NOT EXISTS pg_trgm;"
+    cur.execute(query)
+    conn.commit()
     cur.close()
     logger.debug("created the db")
     return conn
