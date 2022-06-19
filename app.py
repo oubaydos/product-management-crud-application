@@ -1,4 +1,6 @@
-from flask import Flask, request, jsonify, make_response
+import json
+
+from flask import Flask, request, jsonify, make_response, Response
 
 from db.db import Database, Product
 
@@ -6,8 +8,16 @@ app = Flask(__name__)
 database = Database()
 
 
+@app.get('/products')
+def products():  # put application's code here
+    product_id = request.args.get('id')
+    name = request.args.get('name')
+    return_products = database.get_products(product_id=product_id, product_name=name)
+    return Response(json.dumps(return_products), mimetype='application/json')
+
+
 @app.get('/product')
-def hello_world():  # put application's code here
+def product():  # put application's code here
     product_id = request.args.get('id')
     name = request.args.get('name')
     return database.get_product(product_id=product_id, product_name=name).to_dict()

@@ -37,10 +37,10 @@ class Database:
     def get_product(self, product_id=None, product_name=None) -> Product:
         with self.connection.cursor() as cursor:
             if product_id is not None:
-                cursor.execute("SELECT * FROM PRODUCT WHERE product_id = %s ", [product_id])
+                cursor.execute("SELECT * FROM PRODUCT WHERE product_id %% %s ", [product_id])
                 return Product.from_tuple(cursor.fetchone())
             if product_name is not None:
-                cursor.execute("SELECT * FROM PRODUCT WHERE product_name = %s; ", [product_name])
+                cursor.execute("SELECT * FROM PRODUCT WHERE product_name %% %s; ", [product_name])
                 return Product.from_tuple(cursor.fetchone())
             return Product.not_found()
 
@@ -71,3 +71,29 @@ class Database:
                 [product.product_id, product.product_name, product.product_price]
             )
             self.connection.commit()
+
+    def get_products(self, product_id=None, product_name=None):
+        L = []
+        with self.connection.cursor() as cursor:
+            if product_id is not None:
+                cursor.execute(
+                    "SELECT * FROM PRODUCT WHERE PRODUCT_ID %% %s", [product_id]
+                )
+                temp = cursor.fetchall()
+                for i in temp:
+                    L.append(Product.from_tuple(i).to_dict())
+            elif product_name is not None:
+                cursor.execute(
+                    "SELECT * FROM PRODUCT WHERE PRODUCT_NAME %% %s", [product_name]
+                )
+                temp = cursor.fetchall()
+                for i in temp:
+                    L.append(Product.from_tuple(i).to_dict())
+            else:
+                cursor.execute(
+                    "SELECT * FROM PRODUCT"
+                )
+                temp = cursor.fetchall()
+                for i in temp:
+                    L.append(Product.from_tuple(i).to_dict())
+        return L
