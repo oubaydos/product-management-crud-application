@@ -75,14 +75,14 @@ class Database:
     def get_products(self, product_id=None, product_name=None):
         L = []
         with self.connection.cursor() as cursor:
-            if product_id is not None:
+            if product_id is not None and product_id != "":
                 cursor.execute(
                     "SELECT * FROM PRODUCT WHERE PRODUCT_ID %% %s", [product_id]
                 )
                 temp = cursor.fetchall()
                 for i in temp:
                     L.append(Product.from_tuple(i).to_dict())
-            elif product_name is not None:
+            elif product_name is not None and product_name != "":
                 cursor.execute(
                     "SELECT * FROM PRODUCT WHERE PRODUCT_NAME %% %s", [product_name]
                 )

@@ -13,7 +13,9 @@ def products():  # put application's code here
     product_id = request.args.get('id')
     name = request.args.get('name')
     return_products = database.get_products(product_id=product_id, product_name=name)
-    return Response(json.dumps(return_products), mimetype='application/json')
+    response = Response(json.dumps(return_products), mimetype='application/json')
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    return response
 
 
 @app.get('/product')
