@@ -1,10 +1,12 @@
 import json
 
 from flask import Flask, request, jsonify, make_response, Response
+from flask_cors import CORS
 
 from db.db import Database, Product
 
 app = Flask(__name__)
+CORS(app)
 database = Database()
 
 
@@ -32,7 +34,9 @@ def update_product(id):  # put application's code here
     product_price = request.args.get('price')
     updated_product = Product(product_id, product_name, product_price)
     database.update_product(id, updated_product)
-    return "", 204
+    response = Response(status=204)
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    return response
 
 
 @app.post('/product')
@@ -41,9 +45,11 @@ def insert_product():  # put application's code here
     product_id = request_data['id']
     product_name = request_data['name']
     product_price = request_data['price']
-    product = Product(product_id, product_name, product_price)
-    database.insert_product(product)
-    return "", 204
+    result_product = Product(product_id, product_name, product_price)
+    database.insert_product(result_product)
+    response = Response(status=204)
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    return response
 
 
 if __name__ == '__main__':
