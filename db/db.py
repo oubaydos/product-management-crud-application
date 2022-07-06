@@ -97,3 +97,10 @@ class Database:
                 for i in temp:
                     L.append(Product.from_tuple(i).to_dict())
         return L
+
+    def delete_product(self, product_id):
+        with self.connection.cursor() as cursor:
+            if product_id is not None and product_id != "":
+                cursor.execute(
+                    "DELETE FROM PRODUCT WHERE PRODUCT_ID = %s", [product_id]
+                )

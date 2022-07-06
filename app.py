@@ -52,5 +52,13 @@ def insert_product():  # put application's code here
     return response
 
 
+@app.delete('/product/<id>')
+def delete_product(id: str):
+    database.delete_product(id)
+    response = Response(status=200)
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    return response
+
+
 if __name__ == '__main__':
     app.run()
