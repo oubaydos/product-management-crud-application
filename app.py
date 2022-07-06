@@ -29,9 +29,10 @@ def product():  # put application's code here
 
 @app.post('/product/<id>')
 def update_product(id):  # put application's code here
-    product_id = request.args.get('id')
-    product_name = request.args.get('name')
-    product_price = request.args.get('price')
+    request_data = request.get_json()
+    product_id = request_data['id']
+    product_name = request_data['name']
+    product_price = request_data['price']
     updated_product = Product(product_id, product_name, product_price)
     database.update_product(id, updated_product)
     response = Response(status=204)
